@@ -14,10 +14,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import main.Config;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import config.Config;
 import filesystem.FileExplorer;
 
 public class Rouge {

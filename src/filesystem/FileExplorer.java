@@ -1,10 +1,13 @@
 package filesystem;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import config.Config;
+import main.Config;
+
 
 public class FileExplorer extends Thread {
 
@@ -140,8 +143,23 @@ public class FileExplorer extends Thread {
 		System.out.println("Peers: " + this.peers.size());
 	}
 
-	public void addPeer(File document, File peerFile) {
-		peers.put(document.getAbsolutePath(), peerFile);
+	/**
+	 * This method takes the headline, the topic id and the document path and stores the peer.
+	 * @param peerText Headline
+	 * @param topic Topic id
+	 * @param document Corresponding document
+	 * @throws IOException Is thrown if not able to write to disk.
+	 */
+	public void createPeer(String peerText, String topic, File document) throws IOException {
+		
+		File newPeer = new File(Config.outputDirectory + topic + ".P.10.T.1." + document.getName());
+		
+		FileWriter fileWriter = new FileWriter(newPeer);
+		fileWriter.write(peerText);
+		fileWriter.close();
+		
+		peers.put(document.getAbsolutePath(), newPeer);
+		
 	}
 
 }
