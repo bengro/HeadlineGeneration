@@ -18,14 +18,12 @@ public class FirstSentenceBaseline extends AbstractGenerator {
 	 */
 	public FirstSentenceBaseline(File document) {
 		super(document);
-
-		generateHeadlines();	
 	}
 	
 	/**
 	 * Implements the actual headline.
 	 */
-	public void generateHeadlines() {
+	public void generateHeadline() {
 		CoreMap sentence = sentences.get(0);
 		List<CoreLabel> labels = sentence.get(TokensAnnotation.class);
 		

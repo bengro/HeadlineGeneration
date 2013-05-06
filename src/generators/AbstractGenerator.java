@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,19 +18,24 @@ import main.Config;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+import edu.stanford.nlp.tagger.common.TaggerConstants;
 import edu.stanford.nlp.util.CoreMap;
 
 public abstract class AbstractGenerator {
 	
 	Annotation article;
 	List<CoreMap> sentences;
+	HashSet<String> closedWordClasses;
 	
 	public AbstractGenerator(File doc) {
+		
+		// instantiate close word dictionary
+		closedWords();
 		
 		// convert File into String and create Annotation.
 		article = new Annotation(extractArticle(doc));
@@ -38,16 +44,11 @@ public abstract class AbstractGenerator {
 		Runner.pipeline.annotate(article);
 		
 		// extract relevant information
-		tokenizeArticle();
-	}
-	
-	/**
-	 * This method tokenizes a given input text.
-	 * @param article2
-	 */
-	private void tokenizeArticle() {
 		ssplit();
-		lemmatization();
+		
+		// execute headline generation
+		generateHeadline();
+		
 	}
 
 	/**
@@ -55,26 +56,42 @@ public abstract class AbstractGenerator {
 	 * @param text
 	 * @return sentences detected by Stanford CoreNLP.
 	 */
-	private void ssplit() {
-		sentences = article.get(SentencesAnnotation.class);		
+	protected void ssplit() {
+		sentences = article.get(SentencesAnnotation.class);	
 	}
-	
 	
 	/**
 	 * Given a sentence this method returns tagged words of that sentence.
 	 * @param sentence
 	 * @return
 	 */
-	private ArrayList<TaggedWord> pos(List<HasWord> sentence) {
-		MaxentTagger tagger = new MaxentTagger("taggers/left3words-distsim-wsj-0-18.tagger");
-		return tagger.apply(sentence);
+	protected List<CoreLabel> pos(CoreMap sentence) {
+		
+		ArrayList<CoreLabel> posFiltered = new ArrayList<CoreLabel>();
+		
+		for(CoreLabel word : sentence.get(TokensAnnotation.class)) {	
+			String wordString = word.get(PartOfSpeechAnnotation.class);
+			if(!closedWordClasses.contains(wordString)) {
+				posFiltered.add(word);
+			}
+		}
+		
+		return posFiltered;
+		
 	}
 
 	/**
 	 * Lemmatization of a given sentence.
 	 */
-	private void lemmatization() {
+	protected ArrayList<String> lemmatize(CoreMap sentence) {
 		
+		ArrayList<String> lemmas = new ArrayList<String>();
+		
+		for(CoreLabel word : sentence.get(TokensAnnotation.class)) {
+			lemmas.add(word.lemma());
+		}
+		
+		return lemmas;
 	}
 
 	
@@ -82,7 +99,7 @@ public abstract class AbstractGenerator {
 	 * Returns the relevant content, given an XML file.
 	 * @param document
 	 */
-	private String extractArticle(File document) {
+	protected String extractArticle(File document) {
 		String content = null;
 		
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -112,6 +129,7 @@ public abstract class AbstractGenerator {
 			docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(document);
 			content = doc.getElementsByTagName("TEXT").item(0).getTextContent();
+			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -123,10 +141,46 @@ public abstract class AbstractGenerator {
 		return content;
 	}
 	
+	protected void closedWords() {
+		closedWordClasses = new HashSet<String>();
+		closedWordClasses.add(".");
+		closedWordClasses.add(",");
+		closedWordClasses.add("``");
+		closedWordClasses.add("''");
+		closedWordClasses.add(":");
+		closedWordClasses.add("$");
+		closedWordClasses.add("EX");
+		closedWordClasses.add("(");
+		closedWordClasses.add(")");
+		closedWordClasses.add("#");
+		closedWordClasses.add("MD");
+		closedWordClasses.add("CC");
+		closedWordClasses.add("DT");
+		closedWordClasses.add("LS");
+		closedWordClasses.add("PDT");
+		closedWordClasses.add("POS");
+		closedWordClasses.add("PRP");
+		closedWordClasses.add("PRP$");
+		closedWordClasses.add("RP");
+		closedWordClasses.add("TO");
+		closedWordClasses.add(TaggerConstants.EOS_TAG);
+		closedWordClasses.add("UH");
+		closedWordClasses.add("WDT");
+		closedWordClasses.add("WP");
+		closedWordClasses.add("WP$");
+		closedWordClasses.add("WRB");
+		closedWordClasses.add("-LRB-");
+		closedWordClasses.add("-RRB-");
+	}
+	
 	/**
 	 * Is implemented by concrete generator.
 	 * @return
 	 */
 	public abstract String returnHeadline();
 	
+	/**
+	 * Contains the actual headline generation code.
+	 */
+	public abstract void generateHeadline();
 }

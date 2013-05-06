@@ -31,10 +31,10 @@ public class FileExplorer extends Thread {
 	 */
 	HashMap<String, File> peers = new HashMap<String, File>();
 	
-	
-	public FileExplorer() {}
-
-	public void process() {	
+	/**
+	 * Initializes directory browsing looking for topics, documents and models.
+	 */
+	public FileExplorer() {
 		readTopics();
 		readDocuments();
 		readModels();
@@ -150,9 +150,9 @@ public class FileExplorer extends Thread {
 	 * @param document Corresponding document
 	 * @throws IOException Is thrown if not able to write to disk.
 	 */
-	public void createPeer(String peerText, String topic, File document) throws IOException {
+	public void createPeer(String peerText, String topic, File document, String className) throws IOException {
 		
-		File newPeer = new File(Config.outputDirectory + topic + ".P.10.T.1." + document.getName());
+		File newPeer = new File(Config.outputDirectory + className + "/" + topic + ".P.10.T.1." + document.getName());
 		
 		FileWriter fileWriter = new FileWriter(newPeer);
 		fileWriter.write(peerText);

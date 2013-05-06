@@ -24,9 +24,11 @@ import filesystem.FileExplorer;
 public class Rouge {
 
 	FileExplorer files;
+	String evaluation;
 	
-	public Rouge(FileExplorer fileExplorer) {
+	public Rouge(FileExplorer fileExplorer, String evaluation) {
 		this.files = fileExplorer;
+		this.evaluation = evaluation;
 	}
 	
 	public void generateRougeXML() {
@@ -76,7 +78,7 @@ public class Rouge {
 					
 					Element peerElement = doc.createElement("P");
 					peerElement.setAttribute("ID", peerSplits[4]);
-					peerElement.setTextContent("output/"+ peerFile.getName()); // relative to peer directory
+					peerElement.setTextContent(evaluation + "/"+ peerFile.getName()); // relative to peer directory
 					peers.appendChild(peerElement);
 					
 					
@@ -103,7 +105,7 @@ public class Rouge {
 					Transformer transformer = transformerFactory.newTransformer();
 					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 					DOMSource source = new DOMSource(doc);
-					File xmlFile = new File(Config.rougeScriptPath + "t1.EVALCLASS.rouge.in");
+					File xmlFile = new File(Config.rougeScriptPath + "t1." + evaluation + ".rouge.in");
 					StreamResult result = new StreamResult(xmlFile);
 					transformer.transform(source, result);
 					//TODO: create job array with xmlFile.
@@ -143,9 +145,7 @@ public class Rouge {
             p.waitFor();
             p.getInputStream();
             p.getErrorStream();
-            
-            
-            
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}  catch (Exception e) {
