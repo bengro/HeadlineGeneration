@@ -10,14 +10,14 @@
 <AnchorPane minHeight="600.0" minWidth="800.0" styleClass="header" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.pages.ApplicationLoaderController">
   <!-- TODO Add Nodes -->
   <children>
-    <ProgressIndicator fx:id="progressBar" layoutX="546.0" layoutY="250.0" prefHeight="51.0" prefWidth="56.0" progress="0.0" />
-    <Button fx:id="launchButton" layoutX="262.0" layoutY="249.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="276.9999000000025" text="Launch indexer." textOverrun="CENTER_WORD_ELLIPSIS" />
-    <Label layoutX="262.0" layoutY="169.0" prefWidth="234.0" text="DUC DIRECTORY" textFill="WHITE">
+    <ProgressIndicator fx:id="progressBar" layoutX="372.0" layoutY="294.0" prefHeight="51.0" prefWidth="56.0" progress="0.0" />
+    <Button fx:id="launchButton" layoutX="275.0" layoutY="199.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="250.0" text="Launch indexer." textOverrun="CENTER_WORD_ELLIPSIS" />
+    <Label layoutX="275.0" layoutY="131.0" prefWidth="234.0" text="DUC DIRECTORY" textFill="WHITE">
       <font>
         <Font size="11.0" />
       </font>
     </Label>
-    <TextField fx:id="ducPath" layoutX="260.0" layoutY="188.0" prefHeight="35.0" prefWidth="341.0" promptText="Absolute path to DUC directory." />
+    <TextField fx:id="ducPath" layoutX="275.0" layoutY="146.0" prefWidth="250.0" promptText="Absolute path to DUC directory." />
   </children>
   <stylesheets>
     <URL value="@Styles.css" />

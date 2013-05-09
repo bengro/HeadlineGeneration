@@ -1,7 +1,9 @@
 package ui.pages;
 
 import generators.AbstractGenerator;
+import generators.DependencyBaseline;
 import generators.FirstSentenceBaseline;
+import generators.FirstSentencePoSBaseline;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -10,10 +12,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import main.Generator;
-
-import ui.ScreensController;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -27,6 +27,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import main.Generator;
+import ui.ScreensController;
 
 class Topic {
 	
@@ -95,6 +97,11 @@ public class MainApplicationController implements Initializable, IPage {
 	@FXML
 	private Button rougeXMLButton;
 	
+	@FXML
+	private Label headlineLength;
+	
+	private Document currentDocument;
+	
 	@Override
 	public void setScreenParent(ScreensController screenController) {
 		myController = screenController;
@@ -102,7 +109,23 @@ public class MainApplicationController implements Initializable, IPage {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
+
+		final ObservableList<String> classes = FXCollections.observableArrayList();
+		classes.add("FirstSentenceBaseline.class");
+		classes.add("FirstSentencePoSBaseline.class");
+		classes.add("DependencyBaseline.class");
+
+		headlineGenerators.setItems(classes);
 		headlineGenerators.setDisable(true);
+		headlineGenerators.getSelectionModel().selectFirst();
+		headlineGenerators.valueProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+				if(currentDocument != null) {			
+					populateContent(currentDocument);
+				}
+			}
+		});
 	}
 	
 	public void populateTopics() {
@@ -153,8 +176,22 @@ public class MainApplicationController implements Initializable, IPage {
 	}
 
 	protected void populateContent(Document selectedDocument) {
-		Result result = generateHeadline(FirstSentenceBaseline.class, selectedDocument.getDocument());
+		this.currentDocument = selectedDocument;
 		
+		Result result = null;
+		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("DependencyBaseline.class")) {
+			result = generateHeadline(DependencyBaseline.class, selectedDocument.getDocument()); 
+		}
+		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("FirstSentenceBaseline.class")) {
+			result = generateHeadline(FirstSentenceBaseline.class, selectedDocument.getDocument()); 
+		}
+		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("FirstSentencePoSBaseline.class")) {
+			result = generateHeadline(FirstSentencePoSBaseline.class, selectedDocument.getDocument()); 
+		}
+		
+		peerText.setText(result.getPeer());
+		headlineLength.setText("Bytes: " + result.getPeer().length());
+
 		articleText.setText(result.getArticle());
 		
 		modelContainer.getChildren().clear();
@@ -165,7 +202,9 @@ public class MainApplicationController implements Initializable, IPage {
 		}
 		
 		peerText.setText(result.getPeer());
-	
+		headlineLength.setText("Bytes: " + result.getPeer().length());
+		
+		headlineGenerators.setDisable(false);
 	}
 
 	@Override

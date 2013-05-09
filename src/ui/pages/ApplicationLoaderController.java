@@ -50,8 +50,7 @@ public class ApplicationLoaderController implements Initializable, IPage {
 	protected void executeFileExplorer() {
 		Task<Void> task = new Task<Void>() {
 		    @Override public Void call() {
-		        final int max = 1000000;
-		        
+
 		        String[] args = {"ui-mode"};
 		        Generator.main(args);
 

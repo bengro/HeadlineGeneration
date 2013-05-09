@@ -35,6 +35,14 @@
                 <Insets left="270.0" />
               </HBox.margin>
             </Button>
+            <Label fx:id="statusMessage" text="Label" textFill="WHITE">
+              <font>
+                <Font size="11.0" fx:id="x3" />
+              </font>
+              <HBox.margin>
+                <Insets left="15.0" />
+              </HBox.margin>
+            </Label>
           </children>
         </HBox>
         <HBox prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -79,7 +87,7 @@
                   <children>
                     <Label styleClass="cool-label" text="MODELS">
                       <VBox.margin>
-                        <Insets bottom="5.0" top="20.0" fx:id="x3" />
+                        <Insets bottom="5.0" />
                       </VBox.margin>
                     </Label>
                     <VBox id="VBox" fx:id="modelContainer" alignment="CENTER" spacing="5.0">
@@ -94,7 +102,7 @@
                   <children>
                     <Label styleClass="cool-label" text="PEERS">
                       <labelFor>
-                        <ComboBox id="headlineGeneratorClass" fx:id="headlineGenerators" prefWidth="248.0" promptText="Choose headline generation class.">
+                        <ComboBox id="headlineGeneratorClass" fx:id="headlineGenerators" prefWidth="248.0">
                           <items>
                             <FXCollections fx:factory="observableArrayList">
                               <String fx:value="Item 1" />
@@ -113,13 +121,18 @@
                     </Label>
                     <fx:reference source="headlineGenerators" />
                     <TextField fx:id="peerText" prefWidth="200.0" />
+                    <Label fx:id="headlineLength" font="$x3">
+                      <VBox.margin>
+                        <Insets left="2.0" top="3.0" />
+                      </VBox.margin>
+                    </Label>
                   </children>
                 </VBox>
-                <VBox id="VBox" alignment="CENTER_LEFT">
+                <VBox id="VBox" VBox.vgrow="ALWAYS">
                   <children>
                     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="cool-label" text="ARTICLE" VBox.margin="$x1" VBox.vgrow="NEVER">
                       <labelFor>
-                        <TextArea fx:id="articleText" cache="true" prefWidth="200.0" promptText="Loading article..." wrapText="true">
+                        <TextArea fx:id="articleText" cache="true" promptText="Loading article..." wrapText="true" VBox.vgrow="ALWAYS">
                           <VBox.margin>
                             <Insets top="5.0" />
                           </VBox.margin>
@@ -139,20 +152,11 @@
             </VBox>
           </children>
           <VBox.margin>
-            <Insets bottom="25.0" left="15.0" right="15.0" top="15.0" />
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
           </VBox.margin>
         </HBox>
       </children>
     </VBox>
-    <HBox AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="15.0">
-      <children>
-        <Label fx:id="statusBox" text="Status...">
-          <font>
-            <Font size="11.0" />
-          </font>
-        </Label>
-      </children>
-    </HBox>
   </children>
   <stylesheets>
     <URL value="@Styles.css" />
