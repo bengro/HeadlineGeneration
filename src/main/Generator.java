@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.Scanner;
 
 import filesystem.FileExplorer;
+import generators.DependencyBaseline;
 import generators.FirstSentencePoSBaseline;
 import generators.Runner;
 
@@ -17,6 +18,10 @@ public class Generator {
 		System.out.println("Loading documents, models...");
 		fileExplorer = new FileExplorer();
 		System.out.println("Done. Console ready, type \"help\" for help.");
+		
+		// means we invoked this class with the GUI - deactivating console mode
+		if(args.length != 0)
+			return;
 		
 		Scanner in = new Scanner(System.in);
 		while(running) {
@@ -67,7 +72,7 @@ public class Generator {
 	
 	// generates and outputs the headline of a given article - for debugging.
 	public static void generateHeadline(File article) {
-		Runner.generateHeadline(FirstSentencePoSBaseline.class, article);
+		Runner.generateHeadline(DependencyBaseline.class, article);
 	}
 	
 }

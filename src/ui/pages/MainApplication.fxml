@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-stylesheet Styles.css?>
+
+<AnchorPane minHeight="600.0" minWidth="800.0" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.pages.MainApplicationController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <HBox fx:id="headerWrap" alignment="CENTER_LEFT" prefHeight="50.0" styleClass="header" VBox.vgrow="NEVER">
+          <children>
+            <Label prefHeight="59.0" styleClass="title1" text="DUC" HBox.hgrow="SOMETIMES">
+              <font>
+                <Font name="Skia Regular" size="17.0" fx:id="x4" />
+              </font>
+              <HBox.margin>
+                <Insets left="20.0" />
+              </HBox.margin>
+            </Label>
+            <Label font="$x4" prefHeight="59.0" styleClass="title2" text="explorer" textFill="WHITE">
+              <HBox.margin>
+                <Insets left="2.0" />
+              </HBox.margin>
+            </Label>
+            <Button fx:id="rougeXMLButton" mnemonicParsing="false" text="Generate Rouge XML">
+              <HBox.margin>
+                <Insets left="270.0" />
+              </HBox.margin>
+            </Button>
+          </children>
+        </HBox>
+        <HBox prefWidth="200.0" VBox.vgrow="ALWAYS">
+          <children>
+            <VBox id="VBox" alignment="CENTER_LEFT" spacing="5.0" HBox.margin="$x1">
+              <children>
+                <Label styleClass="cool-label" text="TOPICS">
+                  <labelFor>
+                    <ListView id="topicsList" fx:id="topics" prefWidth="180.0" VBox.vgrow="ALWAYS">
+                      <VBox.margin>
+                        <Insets fx:id="x1" />
+                      </VBox.margin>
+                    </ListView>
+                  </labelFor>
+                  <VBox.margin>
+                    <Insets left="3.0" />
+                  </VBox.margin>
+                </Label>
+                <fx:reference source="topics" />
+              </children>
+            </VBox>
+            <VBox id="VBox" alignment="CENTER_LEFT" spacing="5.0">
+              <children>
+                <Label styleClass="cool-label" text="DOCUMENTS">
+                  <labelFor>
+                    <ListView id="documentsList" fx:id="documents" prefWidth="180.0" VBox.vgrow="ALWAYS">
+                      <VBox.margin>
+                        <Insets left="5.0" fx:id="x2" />
+                      </VBox.margin>
+                    </ListView>
+                  </labelFor>
+                  <VBox.margin>
+                    <Insets left="5.0" fx:id="x2" />
+                  </VBox.margin>
+                </Label>
+                <fx:reference source="documents" />
+              </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="contentArea" HBox.hgrow="ALWAYS">
+              <children>
+                <VBox id="modelsContainer" prefWidth="100.0">
+                  <children>
+                    <Label styleClass="cool-label" text="MODELS">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <VBox id="VBox" fx:id="modelContainer" alignment="CENTER" spacing="5.0">
+                      <children>
+                        <TextField prefWidth="200.0" />
+                        <TextField prefWidth="200.0" />
+                      </children>
+                    </VBox>
+                  </children>
+                </VBox>
+                <VBox id="modelsContainer" fx:id="peersContainer" prefWidth="100.0">
+                  <children>
+                    <Label styleClass="cool-label" text="PEERS">
+                      <labelFor>
+                        <ComboBox id="headlineGeneratorClass" fx:id="headlineGenerators" prefWidth="248.0" promptText="Choose headline generation class.">
+                          <items>
+                            <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="Item 1" />
+                              <String fx:value="Item 2" />
+                              <String fx:value="Item 3" />
+                            </FXCollections>
+                          </items>
+                          <VBox.margin>
+                            <Insets bottom="10.0" top="5.0" />
+                          </VBox.margin>
+                        </ComboBox>
+                      </labelFor>
+                      <VBox.margin>
+                        <Insets top="20.0" />
+                      </VBox.margin>
+                    </Label>
+                    <fx:reference source="headlineGenerators" />
+                    <TextField fx:id="peerText" prefWidth="200.0" />
+                  </children>
+                </VBox>
+                <VBox id="VBox" alignment="CENTER_LEFT">
+                  <children>
+                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="cool-label" text="ARTICLE" VBox.margin="$x1" VBox.vgrow="NEVER">
+                      <labelFor>
+                        <TextArea fx:id="articleText" cache="true" prefWidth="200.0" promptText="Loading article..." wrapText="true">
+                          <VBox.margin>
+                            <Insets top="5.0" />
+                          </VBox.margin>
+                        </TextArea>
+                      </labelFor>
+                    </Label>
+                    <fx:reference source="articleText" />
+                  </children>
+                  <VBox.margin>
+                    <Insets top="20.0" />
+                  </VBox.margin>
+                </VBox>
+              </children>
+              <HBox.margin>
+                <Insets left="15.0" />
+              </HBox.margin>
+            </VBox>
+          </children>
+          <VBox.margin>
+            <Insets bottom="25.0" left="15.0" right="15.0" top="15.0" />
+          </VBox.margin>
+        </HBox>
+      </children>
+    </VBox>
+    <HBox AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="15.0">
+      <children>
+        <Label fx:id="statusBox" text="Status...">
+          <font>
+            <Font size="11.0" />
+          </font>
+        </Label>
+      </children>
+    </HBox>
+  </children>
+  <stylesheets>
+    <URL value="@Styles.css" />
+  </stylesheets>
+</AnchorPane>

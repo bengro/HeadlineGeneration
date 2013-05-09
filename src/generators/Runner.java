@@ -2,6 +2,7 @@ package generators;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import main.Config;
@@ -69,7 +70,7 @@ public class Runner {
 			// run headline generation
 			Constructor<T> con = headlineClass.getConstructor(File.class);
 			AbstractGenerator baseline = (AbstractGenerator) con.newInstance(article);
-			
+		
 			// return headlines - just one in this case.
 			String peerText = baseline.returnHeadline();
 			System.out.println("Headline: " + peerText);

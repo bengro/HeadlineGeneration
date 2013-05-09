@@ -22,8 +22,10 @@ import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.tagger.common.TaggerConstants;
+import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
 
 public abstract class AbstractGenerator {
@@ -31,6 +33,7 @@ public abstract class AbstractGenerator {
 	Annotation article;
 	List<CoreMap> sentences;
 	HashSet<String> closedWordClasses;
+	Integer headlineByteLength = 75;
 	
 	public AbstractGenerator(File doc) {
 		
@@ -58,6 +61,24 @@ public abstract class AbstractGenerator {
 	 */
 	protected void ssplit() {
 		sentences = article.get(SentencesAnnotation.class);	
+	}
+	
+
+	/***
+	 * Loads the dependencies of a given sentence.
+	 * @param sentence
+	 * @return
+	 */
+	protected Tree dependencies(CoreMap sentence) {
+
+		LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
+		ArrayList<CoreLabel> words = new ArrayList<CoreLabel>();
+		for(CoreLabel word : sentence.get(TokensAnnotation.class)) {
+			words.add(word);
+		}
+		
+		Tree tree = lp.apply(words);
+		return tree;
 	}
 	
 	/**
@@ -99,7 +120,7 @@ public abstract class AbstractGenerator {
 	 * Returns the relevant content, given an XML file.
 	 * @param document
 	 */
-	protected String extractArticle(File document) {
+	public String extractArticle(File document) {
 		String content = null;
 		
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
