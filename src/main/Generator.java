@@ -49,6 +49,11 @@ public class Generator {
 				processCorpus();
 			}
 			
+			if(input.equals("learn")) {
+				System.out.println("Analysing all models.");
+				Runner.learnModelPriors();
+			}
+			
 			if(input.equals("exit")) {
 				running = false;
 			}

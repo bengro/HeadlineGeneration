@@ -30,10 +30,10 @@ import edu.stanford.nlp.util.CoreMap;
 
 public abstract class AbstractGenerator {
 	
-	Annotation article;
-	List<CoreMap> sentences;
-	HashSet<String> closedWordClasses;
-	Integer headlineByteLength = 75;
+	protected Annotation article;
+	protected List<CoreMap> sentences;
+	protected HashSet<String> closedWordClasses;
+	protected Integer headlineByteLength = 75;
 	
 	public AbstractGenerator(File doc) {
 		
@@ -78,8 +78,10 @@ public abstract class AbstractGenerator {
 		}
 		
 		Tree tree = lp.apply(words);
+		
 		return tree;
 	}
+
 	
 	/**
 	 * Given a sentence this method returns tagged words of that sentence.

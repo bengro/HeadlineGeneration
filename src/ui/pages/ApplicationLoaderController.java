@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import main.Config;
 import main.Generator;
 import ui.ApplicationLauncher;
 import ui.ScreensController;
@@ -31,6 +32,8 @@ public class ApplicationLoaderController implements Initializable, IPage {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		ducPath.setText(Config.ducDirectory);
 		
 		launchButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

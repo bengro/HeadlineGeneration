@@ -1,14 +1,16 @@
 package ui.pages;
 
-import generators.AbstractGenerator;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.trees.TypedDependency;
+import edu.stanford.nlp.util.CoreMap;
 import generators.DependencyBaseline;
-import generators.FirstSentenceBaseline;
-import generators.FirstSentencePoSBaseline;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -100,6 +102,16 @@ public class MainApplicationController implements Initializable, IPage {
 	@FXML
 	private Label headlineLength;
 	
+	@FXML
+	private TextArea firstSentence;
+	
+	@FXML
+	private TextArea pennTree;
+	
+	@FXML
+	private TextArea treeDependencies;
+	
+	
 	private Document currentDocument;
 	
 	@Override
@@ -111,8 +123,6 @@ public class MainApplicationController implements Initializable, IPage {
 	public void initialize(URL location, ResourceBundle resources) {	
 
 		final ObservableList<String> classes = FXCollections.observableArrayList();
-		classes.add("FirstSentenceBaseline.class");
-		classes.add("FirstSentencePoSBaseline.class");
 		classes.add("DependencyBaseline.class");
 
 		headlineGenerators.setItems(classes);
@@ -178,17 +188,9 @@ public class MainApplicationController implements Initializable, IPage {
 	protected void populateContent(Document selectedDocument) {
 		this.currentDocument = selectedDocument;
 		
-		Result result = null;
-		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("DependencyBaseline.class")) {
-			result = generateHeadline(DependencyBaseline.class, selectedDocument.getDocument()); 
-		}
-		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("FirstSentenceBaseline.class")) {
-			result = generateHeadline(FirstSentenceBaseline.class, selectedDocument.getDocument()); 
-		}
-		if(headlineGenerators.getSelectionModel().getSelectedItem().equals("FirstSentencePoSBaseline.class")) {
-			result = generateHeadline(FirstSentencePoSBaseline.class, selectedDocument.getDocument()); 
-		}
+		Result result = generateHeadline(DependencyBaseline.class, selectedDocument.getDocument()); 
 		
+		// TAB 1
 		peerText.setText(result.getPeer());
 		headlineLength.setText("Bytes: " + result.getPeer().length());
 
@@ -205,6 +207,17 @@ public class MainApplicationController implements Initializable, IPage {
 		headlineLength.setText("Bytes: " + result.getPeer().length());
 		
 		headlineGenerators.setDisable(false);
+		
+		// TAB 2
+		firstSentence.setText(result.getFirstSentence());
+		
+		treeDependencies.clear();
+		for(TypedDependency dependency : result.getDependencies()) {
+			treeDependencies.appendText(dependency.toString() + "\n");
+		}
+		
+		pennTree.setText(result.getDependencyTree().toString());
+		
 	}
 
 	@Override
@@ -221,8 +234,18 @@ public class MainApplicationController implements Initializable, IPage {
 		
 		String article;
 		String peer;
+		String firstSentence;
 		ArrayList<String> models = new ArrayList<String>();
+		Collection<TypedDependency> dependencies;
+		Tree dependencyTree;
+		List<CoreLabel> nerLabels;
 		
+		public List<CoreLabel> getNerLabels() {
+			return nerLabels;
+		}
+		public void setNerLabels(List<CoreLabel> nerLabels) {
+			this.nerLabels = nerLabels;
+		}
 		public String getArticle() {
 			return article;
 		}
@@ -241,7 +264,24 @@ public class MainApplicationController implements Initializable, IPage {
 		public void setModels(ArrayList<String> models) {
 			this.models = models;
 		}
-		
+		public void setFirstSentence(CoreMap coreMap) {
+			this.firstSentence = coreMap.toString();
+		}
+		public String getFirstSentence() {
+			return firstSentence;
+		}
+		public void setDependencies(Collection<TypedDependency> dependencies) {
+			this.dependencies = dependencies;
+		}
+		public void setDependencyTree(Tree dependencyTree) {
+			this.dependencyTree = dependencyTree; 
+		}
+		public Collection<TypedDependency> getDependencies() {
+			return dependencies;
+		}
+		public Tree getDependencyTree() {
+			return dependencyTree;
+		}
 	}
 	
 	
@@ -252,9 +292,8 @@ public class MainApplicationController implements Initializable, IPage {
 		
 		try {
 			// run headline generation
-			Constructor<T> con = headlineClass.getConstructor(File.class);
-			AbstractGenerator baseline = (AbstractGenerator) con.newInstance(article);
-		
+			DependencyBaseline baseline = new DependencyBaseline(article);
+			
 			// get article text
 			result.setArticle(baseline.extractArticle(article));
 			
@@ -273,6 +312,15 @@ public class MainApplicationController implements Initializable, IPage {
 				modelFile.close();
 				result.getModels().add(modelHeadline);
 			}
+			
+			// extract first sentence
+			result.setFirstSentence(baseline.getFirstSentence());
+			
+			// get tree
+			result.setDependencyTree(baseline.getDependencyTree());
+			
+			// extract dependencies
+			result.setDependencies(baseline.getDependencies());
 			
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -30,19 +30,6 @@
                 <Insets left="2.0" />
               </HBox.margin>
             </Label>
-            <Button fx:id="rougeXMLButton" mnemonicParsing="false" text="Generate Rouge XML">
-              <HBox.margin>
-                <Insets left="270.0" />
-              </HBox.margin>
-            </Button>
-            <Label fx:id="statusMessage" text="Label" textFill="WHITE">
-              <font>
-                <Font size="11.0" fx:id="x3" />
-              </font>
-              <HBox.margin>
-                <Insets left="15.0" />
-              </HBox.margin>
-            </Label>
           </children>
         </HBox>
         <HBox prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -81,75 +68,119 @@
                 <fx:reference source="documents" />
               </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="contentArea" HBox.hgrow="ALWAYS">
-              <children>
-                <VBox id="modelsContainer" prefWidth="100.0">
-                  <children>
-                    <Label styleClass="cool-label" text="MODELS">
-                      <VBox.margin>
-                        <Insets bottom="5.0" />
-                      </VBox.margin>
-                    </Label>
-                    <VBox id="VBox" fx:id="modelContainer" alignment="CENTER" spacing="5.0">
+            <TabPane tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+              <tabs>
+                <Tab text="Overview">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
                       <children>
-                        <TextField prefWidth="200.0" />
-                        <TextField prefWidth="200.0" />
+                        <VBox styleClass="contentArea" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <children>
+                            <VBox id="modelsContainer" prefWidth="100.0">
+                              <children>
+                                <Label styleClass="cool-label" text="MODELS">
+                                  <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                  </VBox.margin>
+                                </Label>
+                                <VBox id="VBox" fx:id="modelContainer" alignment="CENTER" spacing="5.0">
+                                  <children>
+                                    <TextField prefWidth="200.0" />
+                                    <TextField prefWidth="200.0" />
+                                  </children>
+                                </VBox>
+                              </children>
+                            </VBox>
+                            <VBox id="modelsContainer" fx:id="peersContainer" prefWidth="100.0">
+                              <children>
+                                <Label styleClass="cool-label" text="PEERS">
+                                  <labelFor>
+                                    <ComboBox id="headlineGeneratorClass" fx:id="headlineGenerators" prefWidth="248.0">
+                                      <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                          <String fx:value="Item 1" />
+                                          <String fx:value="Item 2" />
+                                          <String fx:value="Item 3" />
+                                        </FXCollections>
+                                      </items>
+                                      <VBox.margin>
+                                        <Insets bottom="10.0" top="5.0" />
+                                      </VBox.margin>
+                                    </ComboBox>
+                                  </labelFor>
+                                  <VBox.margin>
+                                    <Insets top="20.0" />
+                                  </VBox.margin>
+                                </Label>
+                                <fx:reference source="headlineGenerators" />
+                                <TextField fx:id="peerText" prefWidth="200.0" />
+                                <Label fx:id="headlineLength">
+                                  <font>
+                                    <Font size="11.0" />
+                                  </font>
+                                  <VBox.margin>
+                                    <Insets left="2.0" top="3.0" />
+                                  </VBox.margin>
+                                </Label>
+                              </children>
+                            </VBox>
+                            <VBox id="VBox" VBox.vgrow="ALWAYS">
+                              <children>
+                                <Label alignment="CENTER" contentDisplay="CENTER" styleClass="cool-label" text="ARTICLE" VBox.margin="$x1" VBox.vgrow="NEVER">
+                                  <labelFor>
+                                    <TextArea fx:id="articleText" cache="true" promptText="Loading article..." wrapText="true" VBox.vgrow="ALWAYS">
+                                      <VBox.margin>
+                                        <Insets top="5.0" />
+                                      </VBox.margin>
+                                    </TextArea>
+                                  </labelFor>
+                                </Label>
+                                <fx:reference source="articleText" />
+                              </children>
+                              <VBox.margin>
+                                <Insets top="20.0" />
+                              </VBox.margin>
+                            </VBox>
+                          </children>
+                        </VBox>
                       </children>
-                    </VBox>
-                  </children>
-                </VBox>
-                <VBox id="modelsContainer" fx:id="peersContainer" prefWidth="100.0">
-                  <children>
-                    <Label styleClass="cool-label" text="PEERS">
-                      <labelFor>
-                        <ComboBox id="headlineGeneratorClass" fx:id="headlineGenerators" prefWidth="248.0">
-                          <items>
-                            <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="Item 1" />
-                              <String fx:value="Item 2" />
-                              <String fx:value="Item 3" />
-                            </FXCollections>
-                          </items>
-                          <VBox.margin>
-                            <Insets bottom="10.0" top="5.0" />
-                          </VBox.margin>
-                        </ComboBox>
-                      </labelFor>
-                      <VBox.margin>
-                        <Insets top="20.0" />
-                      </VBox.margin>
-                    </Label>
-                    <fx:reference source="headlineGenerators" />
-                    <TextField fx:id="peerText" prefWidth="200.0" />
-                    <Label fx:id="headlineLength" font="$x3">
-                      <VBox.margin>
-                        <Insets left="2.0" top="3.0" />
-                      </VBox.margin>
-                    </Label>
-                  </children>
-                </VBox>
-                <VBox id="VBox" VBox.vgrow="ALWAYS">
-                  <children>
-                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="cool-label" text="ARTICLE" VBox.margin="$x1" VBox.vgrow="NEVER">
-                      <labelFor>
-                        <TextArea fx:id="articleText" cache="true" promptText="Loading article..." wrapText="true" VBox.vgrow="ALWAYS">
-                          <VBox.margin>
-                            <Insets top="5.0" />
-                          </VBox.margin>
-                        </TextArea>
-                      </labelFor>
-                    </Label>
-                    <fx:reference source="articleText" />
-                  </children>
-                  <VBox.margin>
-                    <Insets top="20.0" />
-                  </VBox.margin>
-                </VBox>
-              </children>
+                      <padding>
+                        <Insets left="15.0" top="15.0" />
+                      </padding>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Dependencies">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
+                          <children>
+                            <Label text="First sentence">
+                              <VBox.margin>
+                                <Insets bottom="5.0" />
+                              </VBox.margin>
+                            </Label>
+                            <TextArea fx:id="firstSentence" prefHeight="65.0" wrapText="true" />
+                            <Label text="Penn Treebank Tree">
+                              <VBox.margin>
+                                <Insets bottom="5.0" top="15.0" fx:id="x3" />
+                              </VBox.margin>
+                            </Label>
+                            <TextArea fx:id="pennTree" wrapText="true" />
+                            <Label text="Dependencies" VBox.margin="$x3" />
+                            <TextArea fx:id="treeDependencies" wrapText="true" />
+                          </children>
+                        </VBox>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
               <HBox.margin>
-                <Insets left="15.0" />
+                <Insets left="5.0" fx:id="x2" />
               </HBox.margin>
-            </VBox>
+            </TabPane>
           </children>
           <VBox.margin>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
