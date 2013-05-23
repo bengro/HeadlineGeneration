@@ -317,7 +317,7 @@ public class MainApplicationController implements Initializable, IPage {
 			result.setFirstSentence(baseline.getFirstSentence());
 			
 			// get tree
-			result.setDependencyTree(baseline.getDependencyTree());
+			result.setDependencyTree(baseline.getPhraseTree());
 			
 			// extract dependencies
 			result.setDependencies(baseline.getDependencies());

@@ -26,13 +26,14 @@ public class TypedDependencyTree {
 	}
 	
 	protected void addNode(TypedDependency dep) {
-		
+	
 		// TAKING CARE OF DEPENDENT
 		// if node was already we only have to fill out missing fields, otherwise create new node.
 		Node newNode;
 		if(treeDict.get(dep.dep().toString()) != null) {
 			newNode = treeDict.get(dep.dep().toString());
 			newNode.setGrammaticalRelation(dep.reln());
+			
 		} else {
 			newNode = new Node();
 			newNode.setWord(dep.dep().label().word());

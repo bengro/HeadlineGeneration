@@ -1,11 +1,14 @@
 package generators;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 
-import edu.stanford.nlp.trees.Constituent;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.Label;
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.GrammaticalStructureFactory;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
@@ -13,11 +16,11 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
-import edu.stanford.nlp.util.Filter;
 
 public class DependencyBaseline extends AbstractGenerator {
 	
-	Tree dependencyTree;
+	Tree phraseTree;
+	TypedDependencyTree dependencyTree;
 	Collection<TypedDependency> dependencies;
 	String generatedHeadline = "";
 	
@@ -34,46 +37,127 @@ public class DependencyBaseline extends AbstractGenerator {
 	public void generateHeadline() {
 		
 		// get dependency of first sentence
-		dependencyTree = dependencies(sentences.get(0));
+		phraseTree = dependencies(sentences.get(0));
 		
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-		GrammaticalStructure gs = gsf.newGrammaticalStructure(dependencyTree);
+		GrammaticalStructure gs = gsf.newGrammaticalStructure(phraseTree);
 		dependencies = gs.typedDependenciesCCprocessed();
-
 		
-		TypedDependencyTree depTree = new TypedDependencyTree();
+		dependencyTree = new TypedDependencyTree();
 		//depTree.addNode(node)
 		for(TypedDependency dep : dependencies) {
 			System.out.println("Added " + dep.toString() + " to the tree.");
-			depTree.addNode(dep);
+			dependencyTree.addNode(dep);
 		}
 		
 		// apply magic algorithm for removing unimportant relationships
-		analyseTree(depTree);
+		analyseTree();
 	
 	}
 
-	//TODO: implement tree inspector and trimmer.
-	protected void analyseTree(TypedDependencyTree depTree) {
+	protected void analyseTree() {
 		
-		System.out.println("root is: " + depTree.getHead().getWord());
-		System.out.println("root has " + depTree.getHead().getDependents().size() + " children");
+		// get children of head: level 1
+		Node headNode = dependencyTree.getHead();
+		System.out.println("root is: " + headNode.getWord() + " and has " + headNode.getDependents().size() + " children");
 		
-		for(Node node : depTree.getHead().getDependents()) {
+		for(Node node : dependencyTree.getHead().getDependents()) {
 			System.out.println("Outgoing relation: " + node.getGrammaticalRelation().getShortName() + " -> " + node.getWord());
 		}
 		
-		Node[] children = depTree.getHead().getDependents().toArray(new Node[depTree.getHead().getDependents().size()]);
+		// get PoS tag of head
+		List<CoreLabel> words = phraseTree.taggedLabeledYield();
+		boolean headNodeIsVerb = false;
+		for(CoreLabel word : words) {
+			if(word.word().equals(headNode.getWord())) {
+				System.out.println(headNode.getWord() + " is a " + word.tag());
+				headNodeIsVerb = true;
+				break;
+			}
+		}
 		
-		String tempHeadline = children[0].getWord() + " " + depTree.getHead().getWord() + " " + children[1].getWord();
-		System.out.println("Temp headline: " + tempHeadline);
+		// analyse branches, focus on most important ones: nsubj, dobj, prep
+		List<Node> headDependents = headNode.getDependents();
+		
+		String verb;
+		if(headNodeIsVerb) {
+			verb = headNode.getWord();
+			//TODO: translate verb to present tense.
+		} else {
+			verb = "-no verb-";
+		}
+		
+		String subject = "";
+		Node subjectNode = returnSubject(headDependents);
+		if(subjectNode != null) {
+			subject = subjectNode.getWord();
+		} else {
+			subject = "-no subject-";
+		}
+		
+		String object = "";
+		Node objectNode = returnObject(headDependents);
+		if(objectNode != null) {
+			object = objectNode.getWord();
+		} else {
+			object = "-no object-";
+		}
+		
+		String tempHeadline = subject + " " + verb + " " + object;
 		
 		this.generatedHeadline = tempHeadline;
+		System.out.println(generatedHeadline);
+		
+		// drill down in the branches we consider most important - until 75 bytes
+		
 	}
 	
-	public Tree getDependencyTree() {
-		return dependencyTree;
+	/**
+	 * This method returns the subject of the sentence.
+	 * @param headDependents
+	 * @return
+	 */
+	private Node returnSubject(List<Node> headDependents) {
+		
+		HashSet<String> important = new HashSet<String>();
+		important.add("nsubj");
+		important.add("nsubjpass");
+		
+		List<Node> relevant = new ArrayList<Node>();
+		
+		for(Node node : headDependents) {
+			if(important.contains(node.getGrammaticalRelation().getShortName())) {
+				relevant.add(node);
+				System.out.println("outgoing subject relation: " + node.getGrammaticalRelation().getShortName());
+				return node;
+			}
+		}
+		
+		return null;
+	}
+
+	private Node returnObject(List<Node> headDependents) {
+		
+		HashSet<String> important = new HashSet<String>();
+		important.add("dobj");
+		important.add("iobj");
+		
+		List<Node> relevant = new ArrayList<Node>();
+		
+		for(Node node : headDependents) {
+			if(important.contains(node.getGrammaticalRelation().getShortName())) {
+				relevant.add(node);
+				System.out.println("outgoing object relation: " + node.getGrammaticalRelation().getShortName());
+				return node;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Tree getPhraseTree() {
+		return phraseTree;
 	}
 
 	public Collection<TypedDependency> getDependencies() {
