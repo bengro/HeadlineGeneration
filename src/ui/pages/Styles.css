@@ -12,7 +12,7 @@
 }
 .header {
 	-fx-background: gray;
-	-fx-background-image: url('resources/600px-Background.jpg');
+	-fx-background-image: url('Background.jpg');
 	-fx-background-repeat: repeat;
 }
 .cool-label {
