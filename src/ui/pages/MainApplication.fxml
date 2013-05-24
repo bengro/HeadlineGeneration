@@ -78,9 +78,19 @@
                           <children>
                             <VBox id="modelsContainer" prefWidth="100.0">
                               <children>
+                                <Label styleClass="cool-label" text="PATH">
+                                  <VBox.margin>
+                                    <Insets bottom="5.0" fx:id="x5" />
+                                  </VBox.margin>
+                                </Label>
+                                <TextField fx:id="articlePath">
+                                  <VBox.margin>
+                                    <Insets bottom="20.0" fx:id="x6" />
+                                  </VBox.margin>
+                                </TextField>
                                 <Label styleClass="cool-label" text="MODELS">
                                   <VBox.margin>
-                                    <Insets bottom="5.0" />
+                                    <Insets bottom="5.0" fx:id="x5" />
                                   </VBox.margin>
                                 </Label>
                                 <VBox id="VBox" fx:id="modelContainer" alignment="CENTER" spacing="5.0">
@@ -103,16 +113,12 @@
                                           <String fx:value="Item 3" />
                                         </FXCollections>
                                       </items>
-                                      <VBox.margin>
-                                        <Insets bottom="10.0" top="5.0" />
-                                      </VBox.margin>
                                     </ComboBox>
                                   </labelFor>
                                   <VBox.margin>
-                                    <Insets top="20.0" />
+                                    <Insets bottom="5.0" top="20.0" />
                                   </VBox.margin>
                                 </Label>
-                                <fx:reference source="headlineGenerators" />
                                 <TextField fx:id="peerText" prefWidth="200.0" />
                                 <Label fx:id="headlineLength">
                                   <font>
@@ -156,19 +162,21 @@
                       <children>
                         <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
                           <children>
-                            <Label text="First sentence">
+                            <Label styleClass="cool-label" text="FIRST SENTENCE">
                               <VBox.margin>
-                                <Insets bottom="5.0" />
+                                <Insets bottom="5.0" fx:id="x5" />
                               </VBox.margin>
                             </Label>
-                            <TextArea fx:id="firstSentence" prefHeight="65.0" wrapText="true" />
-                            <Label text="Penn Treebank Tree">
+                            <TextArea fx:id="firstSentence" prefHeight="65.0" wrapText="true" VBox.margin="$x6" />
+                            <Label styleClass="cool-label" text="ROOT NODE TYPE" VBox.margin="$x5" />
+                            <TextField fx:id="rootNodeType" minHeight="22.0" prefWidth="434.0" />
+                            <Label styleClass="cool-label" text="PENN TREEBANK TREE">
                               <VBox.margin>
                                 <Insets bottom="5.0" top="15.0" fx:id="x3" />
                               </VBox.margin>
                             </Label>
                             <TextArea fx:id="pennTree" wrapText="true" />
-                            <Label text="Dependencies" VBox.margin="$x3" />
+                            <Label styleClass="cool-label" text="DEPENDENCIES" VBox.margin="$x3" />
                             <TextArea fx:id="treeDependencies" wrapText="true" VBox.vgrow="ALWAYS" />
                           </children>
                         </VBox>

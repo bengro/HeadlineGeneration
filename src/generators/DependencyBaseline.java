@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.Label;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.GrammaticalStructureFactory;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
@@ -22,7 +20,12 @@ public class DependencyBaseline extends AbstractGenerator {
 	Tree phraseTree;
 	TypedDependencyTree dependencyTree;
 	Collection<TypedDependency> dependencies;
-	String generatedHeadline = "";
+	String generatedHeadline;
+	
+	/**
+	 * For GUI only.
+	 */
+	String rootNodeType; 
 	
 	public DependencyBaseline(File doc) {
 		super(doc);
@@ -73,6 +76,7 @@ public class DependencyBaseline extends AbstractGenerator {
 			if(word.word().equals(headNode.getWord())) {
 				System.out.println(headNode.getWord() + " is a " + word.tag());
 				headNodeIsVerb = true;
+				rootNodeType = word.tag();
 				break;
 			}
 		}
@@ -106,7 +110,7 @@ public class DependencyBaseline extends AbstractGenerator {
 		
 		String tempHeadline = subject + " " + verb + " " + object;
 		
-		this.generatedHeadline = tempHeadline;
+		generatedHeadline = tempHeadline;
 		System.out.println(generatedHeadline);
 		
 		// drill down in the branches we consider most important - until 75 bytes
@@ -166,6 +170,10 @@ public class DependencyBaseline extends AbstractGenerator {
 	
 	public CoreMap getFirstSentence() {
 		return sentences.get(0);
+	}
+	
+	public String getRootNodeType() {
+		return rootNodeType;
 	}
 	
 }

@@ -1,10 +1,10 @@
 package main;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import filesystem.FileExplorer;
 import generators.DependencyBaseline;
-import generators.FirstSentencePoSBaseline;
 import generators.Runner;
 
 public class Generator {
@@ -35,6 +35,23 @@ public class Generator {
 			
 			if(input.equals("example")) {
 				generateHeadline(new File(Config.exampleDoc));
+			}
+			
+			if(input.equals("examples")) {
+				ArrayList<File> examples = new ArrayList<File>();
+				examples.add(new File(Config.ducDirectory + "docs/d30001t/APW19981016.0240"));
+				examples.add(new File(Config.ducDirectory + "docs/d30005t/APW19981129.0665"));
+				examples.add(new File(Config.ducDirectory + "docs/d30005t/APW19981112.0551"));
+				examples.add(new File(Config.ducDirectory + "docs/d30017t/NYT19981114.0099"));
+				examples.add(new File(Config.ducDirectory + "docs/d30047t/APW19981120.0892"));
+				examples.add(new File(Config.ducDirectory + "docs/d30047t/APW19981209.1470"));
+				examples.add(new File(Config.ducDirectory + "docs/d31022t/APW19981030.0489"));
+				examples.add(new File(Config.ducDirectory + "docs/d31033t/NYT19981018.0065"));
+			
+				for(File doc : examples) {
+					generateHeadline(doc);
+				}
+				
 			}
 			
 			if(input.equals("help")) {

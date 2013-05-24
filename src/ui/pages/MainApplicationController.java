@@ -81,11 +81,11 @@ public class MainApplicationController implements Initializable, IPage {
 	@FXML 
 	private ListView<Document> documents;
 	
+	@FXML
+	private TextField articlePath;
+	
 	@FXML 
 	private TextArea articleText;
-	
-	@FXML
-	private ComboBox<String> headlineGenerators;
 	
 	@FXML
 	private VBox modelContainer;
@@ -111,6 +111,8 @@ public class MainApplicationController implements Initializable, IPage {
 	@FXML
 	private TextArea treeDependencies;
 	
+	@FXML
+	private TextField rootNodeType;
 	
 	private Document currentDocument;
 	
@@ -122,20 +124,6 @@ public class MainApplicationController implements Initializable, IPage {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
 
-		final ObservableList<String> classes = FXCollections.observableArrayList();
-		classes.add("DependencyBaseline.class");
-
-		headlineGenerators.setItems(classes);
-		headlineGenerators.setDisable(true);
-		headlineGenerators.getSelectionModel().selectFirst();
-		headlineGenerators.valueProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-				if(currentDocument != null) {			
-					populateContent(currentDocument);
-				}
-			}
-		});
 	}
 	
 	public void populateTopics() {
@@ -191,6 +179,8 @@ public class MainApplicationController implements Initializable, IPage {
 		Result result = generateHeadline(DependencyBaseline.class, selectedDocument.getDocument()); 
 		
 		// TAB 1
+		articlePath.setText(selectedDocument.getDocument().getAbsolutePath());
+		
 		peerText.setText(result.getPeer());
 		headlineLength.setText("Bytes: " + result.getPeer().length());
 
@@ -203,11 +193,6 @@ public class MainApplicationController implements Initializable, IPage {
 			modelContainer.getChildren().add(textField);
 		}
 		
-		peerText.setText(result.getPeer());
-		headlineLength.setText("Bytes: " + result.getPeer().length());
-		
-		headlineGenerators.setDisable(false);
-		
 		// TAB 2
 		firstSentence.setText(result.getFirstSentence());
 		
@@ -217,6 +202,8 @@ public class MainApplicationController implements Initializable, IPage {
 		}
 		
 		pennTree.setText(result.getDependencyTree().toString());
+		
+		rootNodeType.setText(result.getRootNodeType());
 		
 	}
 
@@ -239,9 +226,16 @@ public class MainApplicationController implements Initializable, IPage {
 		Collection<TypedDependency> dependencies;
 		Tree dependencyTree;
 		List<CoreLabel> nerLabels;
+		String rootNodeType;
 		
 		public List<CoreLabel> getNerLabels() {
 			return nerLabels;
+		}
+		public String getRootNodeType() {
+			return this.rootNodeType;
+		}
+		public void setRootNodeType(String type) {
+			this.rootNodeType = type;
 		}
 		public void setNerLabels(List<CoreLabel> nerLabels) {
 			this.nerLabels = nerLabels;
@@ -297,10 +291,6 @@ public class MainApplicationController implements Initializable, IPage {
 			// get article text
 			result.setArticle(baseline.extractArticle(article));
 			
-			// return headlines - just one in this case.
-			String peerText = baseline.returnHeadline();
-			result.setPeer(peerText);
-			
 			// show models
 			File[] models = Generator.fileExplorer.getModels().get(article.getAbsolutePath());
 			for(File model : models) {
@@ -313,6 +303,11 @@ public class MainApplicationController implements Initializable, IPage {
 				result.getModels().add(modelHeadline);
 			}
 			
+			// return headlines - just one in this case.
+			String peerText = baseline.returnHeadline();
+			System.out.println("Headline: " + peerText);
+			result.setPeer(peerText);
+						
 			// extract first sentence
 			result.setFirstSentence(baseline.getFirstSentence());
 			
@@ -321,6 +316,9 @@ public class MainApplicationController implements Initializable, IPage {
 			
 			// extract dependencies
 			result.setDependencies(baseline.getDependencies());
+			
+			// root node type
+			result.setRootNodeType(baseline.getRootNodeType());
 			
 		} catch(Exception e) {
 			e.printStackTrace();

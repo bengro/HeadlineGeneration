@@ -78,6 +78,16 @@
                           <children>
                             <VBox id="modelsContainer" prefWidth="100.0">
                               <children>
+                                <Label styleClass="cool-label" text="PATH">
+                                  <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                  </VBox.margin>
+                                </Label>
+                                <TextField fx:id="articlePath">
+                                  <VBox.margin>
+                                    <Insets bottom="20.0" />
+                                  </VBox.margin>
+                                </TextField>
                                 <Label styleClass="cool-label" text="MODELS">
                                   <VBox.margin>
                                     <Insets bottom="5.0" />
@@ -103,16 +113,12 @@
                                           <String fx:value="Item 3" />
                                         </FXCollections>
                                       </items>
-                                      <VBox.margin>
-                                        <Insets bottom="10.0" top="5.0" />
-                                      </VBox.margin>
                                     </ComboBox>
                                   </labelFor>
                                   <VBox.margin>
-                                    <Insets top="20.0" />
+                                    <Insets bottom="5.0" top="20.0" />
                                   </VBox.margin>
                                 </Label>
-                                <fx:reference source="headlineGenerators" />
                                 <TextField fx:id="peerText" prefWidth="200.0" />
                                 <Label fx:id="headlineLength">
                                   <font>
@@ -169,7 +175,7 @@
                             </Label>
                             <TextArea fx:id="pennTree" wrapText="true" />
                             <Label text="Dependencies" VBox.margin="$x3" />
-                            <TextArea fx:id="treeDependencies" wrapText="true" />
+                            <TextArea fx:id="treeDependencies" wrapText="true" VBox.vgrow="ALWAYS" />
                           </children>
                         </VBox>
                       </children>
