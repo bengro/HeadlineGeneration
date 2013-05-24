@@ -75,10 +75,12 @@ public class Runner {
 			
 		}
 		
+		System.out.println("Processing done.");
+		
 		// generate rouge xml and label it accordingly.
-		System.out.println("Generating ROUGE XML file...");
-		Rouge rouge = new Rouge(Generator.fileExplorer, headlineClass.getSimpleName());
-		rouge.generateRougeXML();
+		//System.out.println("Generating ROUGE XML file...");
+		//Rouge rouge = new Rouge(Generator.fileExplorer, headlineClass.getSimpleName());
+		//rouge.generateRougeXML();
 		
 	}
 

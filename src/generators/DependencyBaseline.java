@@ -47,7 +47,7 @@ public class DependencyBaseline extends AbstractGenerator {
 		dependencyTree = new TypedDependencyTree();
 		//depTree.addNode(node)
 		for(TypedDependency dep : dependencies) {
-			System.out.println("Added " + dep.toString() + " to the tree.");
+			//System.out.println("Added " + dep.toString() + " to the tree.");
 			dependencyTree.addNode(dep);
 		}
 		

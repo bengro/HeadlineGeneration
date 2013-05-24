@@ -71,7 +71,7 @@ public class Generator {
 		System.out.println("Start generating headlines...");		
 
 		// change to FirstSentenceBaseline.class
-		Runner.generateHeadlines(FirstSentencePoSBaseline.class); 
+		Runner.generateHeadlines(DependencyBaseline.class); 
 		
 	}
 	
