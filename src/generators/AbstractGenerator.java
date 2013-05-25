@@ -82,7 +82,6 @@ public abstract class AbstractGenerator {
 		return tree;
 	}
 
-	
 	/**
 	 * Given a sentence this method returns tagged words of that sentence.
 	 * @param sentence

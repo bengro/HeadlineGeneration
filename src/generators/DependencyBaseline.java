@@ -53,111 +53,19 @@ public class DependencyBaseline extends AbstractGenerator {
 			//System.out.println("Added " + dep.toString() + " to the tree.");
 			dependencyTree.addNode(dep);
 		}
-		
-		// apply magic algorithm for removing unimportant relationships
-		analyseTree();
-	
-	}
 
-	protected void analyseTree() {
-		
-		// get children of head: level 1
-		Node headNode = dependencyTree.getHead();
-		System.out.println("root is: " + headNode.getWord() + " and has " + headNode.getDependents().size() + " children");
-		
-		for(Node node : dependencyTree.getHead().getDependents()) {
-			System.out.println("Outgoing relation: " + node.getGrammaticalRelation().getShortName() + " -> " + node.getWord());
-		}
-		
-		// get PoS tag of head
-		List<CoreLabel> words = phraseTree.taggedLabeledYield();
-		boolean headNodeIsVerb = false;
-		for(CoreLabel word : words) {
-			if(word.word().equals(headNode.getWord())) {
-				System.out.println(headNode.getWord() + " is a " + word.tag());
-				headNodeIsVerb = true;
-				rootNodeType = word.tag();
-				break;
-			}
-		}
-		
-		// analyse branches, focus on most important ones: nsubj, dobj, prep
-		List<Node> headDependents = headNode.getDependents();
-		
-		String verb;
-		if(headNodeIsVerb) {
-			verb = headNode.getWord();
-			//TODO: translate verb to present tense.
-		} else {
-			verb = "-no verb-";
-		}
-		
-		String subject = "";
-		Node subjectNode = returnSubject(headDependents);
-		if(subjectNode != null) {
-			subject = subjectNode.getWord();
-		} else {
-			subject = "-no subject-";
-		}
-		
-		String object = "";
-		Node objectNode = returnObject(headDependents);
-		if(objectNode != null) {
-			object = objectNode.getWord();
-		} else {
-			object = "-no object-";
-		}
-		
-		String tempHeadline = subject + " " + verb + " " + object;
-		
-		generatedHeadline = tempHeadline;
-		System.out.println(generatedHeadline);
-		
-		// drill down in the branches we consider most important - until 75 bytes
-		
-	}
-	
-	/**
-	 * This method returns the subject of the sentence.
-	 * @param headDependents
-	 * @return
-	 */
-	private Node returnSubject(List<Node> headDependents) {
-		
-		HashSet<String> important = new HashSet<String>();
-		important.add("nsubj");
-		important.add("nsubjpass");
-		
-		List<Node> relevant = new ArrayList<Node>();
-		
-		for(Node node : headDependents) {
-			if(important.contains(node.getGrammaticalRelation().getShortName())) {
-				relevant.add(node);
-				System.out.println("outgoing subject relation: " + node.getGrammaticalRelation().getShortName());
-				return node;
-			}
-		}
-		
-		return null;
-	}
+        RuleEvaluator eval = new RuleEvaluator();
+        Headline headline = eval.evaluateRules(dependencyTree.getHead());
+        String headlineString = "";
 
-	private Node returnObject(List<Node> headDependents) {
-		
-		HashSet<String> important = new HashSet<String>();
-		important.add("dobj");
-		important.add("iobj");
-		
-		List<Node> relevant = new ArrayList<Node>();
-		
-		for(Node node : headDependents) {
-			if(important.contains(node.getGrammaticalRelation().getShortName())) {
-				relevant.add(node);
-				System.out.println("outgoing object relation: " + node.getGrammaticalRelation().getShortName());
-				return node;
-			}
-		}
-		
-		return null;
+        for (Node node: headline){
+            headlineString += node.getWord() + " ";
+        }
+        headlineString.trim();
+
+        generatedHeadline = headlineString;
+        System.out.println(generatedHeadline);
+	
 	}
 	
 	public Tree getPhraseTree() {
