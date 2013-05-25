@@ -160,6 +160,9 @@ public abstract class AbstractGenerator {
 			e.printStackTrace();
 		}
         
+		// remove invalid part 
+		content = content.replaceAll("(.)* _ ", "");
+		
 		return content;
 	}
 	

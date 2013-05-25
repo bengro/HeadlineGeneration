@@ -44,17 +44,22 @@ public class DependencyBaseline extends AbstractGenerator {
 		dependencies = gs.typedDependenciesCCprocessed();
 		
 		dependencyTree = new TypedDependencyTree();
-		//depTree.addNode(node)
 		for(TypedDependency dep : dependencies) {
-			//System.out.println("Added " + dep.toString() + " to the tree.");
-			dependencyTree.addNode(dep);
 			
+			// if root, set rootNodeType variable
+			if(dep.gov().toString().equals("ROOT-0")) {
+				System.out.println("Root is " + dep.dep().label().tag());
+				rootNodeType = dep.dep().label().tag();
+			}
+			
+			dependencyTree.addNode(dep);
+			//System.out.println("Added " + dep.toString() + " to the tree.");
 		}
-
+		
+		
 		RuleEvaluator eval = new RuleEvaluator();
         Headline headline = eval.evaluateRules(dependencyTree.getHead());
         String headlineString = "";
-
 
         for (Node node: headline){
             headlineString += node.getWord() + " ";
