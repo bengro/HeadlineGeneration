@@ -97,6 +97,11 @@ class Node {
 	private Node parent;
 	
 	/**
+	 * Keeps track of undergone modifications by rule.
+	 */
+	private boolean isModified = false;
+	
+	/**
 	 * Given by Stanford NLP library, defines relation between parent and this node.
 	 */
 	private GrammaticalRelation relation; 
@@ -148,6 +153,14 @@ class Node {
 	
 	public void addDependent(Node node) {
 		this.dependents.add(node);
+	}
+
+	public boolean isModified() {
+		return isModified;
+	}
+
+	public void setModified(boolean isModified) {
+		this.isModified = isModified;
 	}
 	
 }

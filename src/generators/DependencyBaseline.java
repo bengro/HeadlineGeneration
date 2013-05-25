@@ -52,6 +52,7 @@ public class DependencyBaseline extends AbstractGenerator {
 		for(TypedDependency dep : dependencies) {
 			//System.out.println("Added " + dep.toString() + " to the tree.");
 			dependencyTree.addNode(dep);
+			
 		}
 		
 		// apply magic algorithm for removing unimportant relationships
@@ -71,12 +72,15 @@ public class DependencyBaseline extends AbstractGenerator {
 		
 		// get PoS tag of head
 		List<CoreLabel> words = phraseTree.taggedLabeledYield();
+		
 		boolean headNodeIsVerb = false;
 		for(CoreLabel word : words) {
+			System.out.println("word " + word.word() + " head word " + headNode.getWord());
+			
 			if(word.word().equals(headNode.getWord())) {
-				System.out.println(headNode.getWord() + " is a " + word.tag());
 				headNodeIsVerb = true;
 				rootNodeType = word.tag();
+				System.out.println("verb lemma: " + word.lemma());
 				break;
 			}
 		}
