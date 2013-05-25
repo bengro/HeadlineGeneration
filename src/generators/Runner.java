@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+import output.Rouge;
+
 import main.Config;
 import main.Generator;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
@@ -75,9 +77,9 @@ public class Runner {
 		System.out.println("Processing done.");
 		
 		// generate rouge xml and label it accordingly.
-		//System.out.println("Generating ROUGE XML file...");
-		//Rouge rouge = new Rouge(Generator.fileExplorer, headlineClass.getSimpleName());
-		//rouge.generateRougeXML();
+		System.out.println("Generating ROUGE XML file...");
+		Rouge rouge = new Rouge(Generator.fileExplorer, headlineClass.getSimpleName());
+		rouge.generateRougeXML();
 		
 	}
 
