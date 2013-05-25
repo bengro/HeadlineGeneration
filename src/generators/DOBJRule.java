@@ -2,10 +2,10 @@ package generators;
 
 public class DOBJRule implements Rule {
     @Override
-    public void apply(Node currentNode, Headline output) {
+    public boolean apply(Node currentNode, Headline output) {
         int currentHeadlineSize = output.getHeadlineSize();
-        if (currentNode.getWord().length() + 1 + currentHeadlineSize > 75){
-            return;
+        if (currentNode.getWord().length() + 1 + currentHeadlineSize > maxHeadlineLength){
+            return false;
         }
 
         // verb
@@ -13,7 +13,7 @@ public class DOBJRule implements Rule {
         int govIndex = output.lastIndexOf(governor);
         
         // add object after verb.
-        output.add(govIndex, currentNode);
-        
+        output.add(govIndex + 1, currentNode);
+        return true;
     }
 }

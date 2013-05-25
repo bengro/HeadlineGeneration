@@ -1,6 +1,13 @@
 package generators;
 
-public class NNRule implements Rule {
+/**
+ * Created with IntelliJ IDEA.
+ * User: daspan
+ * Date: 5/25/13
+ * Time: 4:45 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class ADVMODRule implements Rule {
     @Override
     public boolean apply(Node currentNode, Headline output) {
         int currentHeadlineSize = output.getHeadlineSize();
@@ -13,7 +20,7 @@ public class NNRule implements Rule {
 
         assert govIndex >= 0;
 
-        output.add(govIndex, currentNode);
+        output.add(govIndex + 1, currentNode);
 
         return true;
     }

@@ -11,8 +11,14 @@ public class RuleEvaluator {
 
     public RuleEvaluator(){
         rules = new HashMap<>();
+
         rules.put("nn", new NNRule());
         rules.put("amod", new AMODRule());
+        rules.put("nsubj", new NSUBJRule());
+        rules.put("nsubjpass", new NSUBJRule());
+        rules.put("agent", new AGENTRule());
+        rules.put("iobj", new DOBJRule());
+        rules.put("dobj", new DOBJRule());
     }
 
     public Headline evaluateRules(Node root){
@@ -33,10 +39,9 @@ public class RuleEvaluator {
                 String type = node.getGrammaticalRelation().getShortName();
                 Rule rule = rules.get(type);
                 if (rule != null){
-                    rule.apply(node, output);
+                    if (rule.apply(node, output));
+                        nextLevel.addAll(node.getDependents());
                 }
-
-                nextLevel.addAll(node.getDependents());
             }
 
             nodeQueue = nextLevel;

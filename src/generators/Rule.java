@@ -6,5 +6,7 @@ import edu.stanford.nlp.trees.TypedDependency;
 import java.util.LinkedList;
 
 public interface Rule {
-    public void apply(Node currentNode, Headline output);
+    public boolean apply(Node currentNode, Headline output);
+
+    public final int maxHeadlineLength = 75;
 }
