@@ -58,7 +58,7 @@ public class DependencyBaseline extends AbstractGenerator {
 		
 		
 		RuleEvaluator eval = new RuleEvaluator();
-        Headline headline = eval.evaluateRules(dependencyTree.getHead());
+        Headline headline = eval.evaluateRules(dependencyTree.getHead(), 75);
         String headlineString = "";
 
         for (Node node: headline){
