@@ -34,8 +34,11 @@ public abstract class AbstractGenerator {
 	protected List<CoreMap> sentences;
 	protected HashSet<String> closedWordClasses;
 	protected Integer headlineByteLength = 75;
+	protected File doc;
 	
 	public AbstractGenerator(File doc) {
+		
+		this.doc = doc;
 		
 		// instantiate close word dictionary
 		closedWords();

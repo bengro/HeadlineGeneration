@@ -35,39 +35,47 @@ public class DependencyBaseline extends AbstractGenerator {
 	@Override
 	public void generateHeadline() {
 		
-		// get dependency of first sentence
-		phraseTree = dependencies(sentences.get(0));
+		System.out.println("current doc: " + doc);
 		
-		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-		GrammaticalStructure gs = gsf.newGrammaticalStructure(phraseTree);
-		dependencies = gs.typedDependenciesCCprocessed();
-		
-		dependencyTree = new TypedDependencyTree();
-		for(TypedDependency dep : dependencies) {
+		try {
+			// get dependency of first sentence
+			phraseTree = dependencies(sentences.get(0));
 			
-			// if root, set rootNodeType variable
-			if(dep.gov().toString().equals("ROOT-0")) {
-				System.out.println("Root is " + dep.dep().label().tag());
-				rootNodeType = dep.dep().label().tag();
+			TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+			GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+			GrammaticalStructure gs = gsf.newGrammaticalStructure(phraseTree);
+			dependencies = gs.typedDependenciesCCprocessed();
+			
+			dependencyTree = new TypedDependencyTree();
+			for(TypedDependency dep : dependencies) {
+				
+				// if root, set rootNodeType variable
+				if(dep.gov().toString().equals("ROOT-0")) {
+					System.out.println("Root is " + dep.dep().label().tag());
+					rootNodeType = dep.dep().label().tag();
+				}
+				
+				dependencyTree.addNode(dep);
+				//System.out.println("Added " + dep.toString() + " to the tree.");
 			}
 			
-			dependencyTree.addNode(dep);
-			//System.out.println("Added " + dep.toString() + " to the tree.");
+			RuleEvaluator eval = new RuleEvaluator();
+	        Headline headline = eval.evaluateRules(dependencyTree.getHead());
+	        String headlineString = "";
+	
+	        for (Node node: headline){
+	            headlineString += node.getWord() + " ";
+	        }
+	        headlineString.trim();
+	
+	        generatedHeadline = headlineString;
+	        
+		} catch(Exception ex) {
+			System.out.println("ATTENTION: fall back headline used.");
+			generatedHeadline = getFirstSentence().toString().substring(0, super.headlineByteLength);
 		}
-		
-		
-		RuleEvaluator eval = new RuleEvaluator();
-        Headline headline = eval.evaluateRules(dependencyTree.getHead());
-        String headlineString = "";
-
-        for (Node node: headline){
-            headlineString += node.getWord() + " ";
-        }
-        headlineString.trim();
-
-        generatedHeadline = headlineString;
-        System.out.println(generatedHeadline);
+        
+		System.out.println(generatedHeadline);
 
 	}
 	
