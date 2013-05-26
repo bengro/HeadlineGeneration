@@ -2,7 +2,7 @@ package main;
 
 public class Config {
 	
-	public static String ducDirectory = "/home/daspan/workspace/nlpheadlinegeneration/NLP/headlines/DUC2004/";
+	public static String ducDirectory = "/Users/bengro/Documents/workspace/nlp/headlines/DUC2004/";
 	public static String exampleDoc = ducDirectory + "docs/d30001t/APW19981016.0240";
 	public static String outputDirectory = ducDirectory + "eval/peers/";
 	
