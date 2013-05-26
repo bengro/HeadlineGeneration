@@ -16,9 +16,12 @@ public class RuleEvaluator {
         rules.put("amod", new AMODRule());
         rules.put("nsubj", new NSUBJRule());
         rules.put("nsubjpass", new NSUBJRule());
+        rules.put("xsubj", new XSUBJRule());
         rules.put("agent", new AGENTRule());
         rules.put("iobj", new DOBJRule());
         rules.put("dobj", new DOBJRule());
+        rules.put("advmod", new ADVMODRule());
+        rules.put("prep", new PREPRule());
     }
 
     public Headline evaluateRules(Node root){
@@ -37,7 +40,12 @@ public class RuleEvaluator {
         for (int i=1; i < 3; i++){
             for(Node node: nodeQueue){
                 String type = node.getGrammaticalRelation().getShortName();
-                Rule rule = rules.get(type);
+                Rule rule = null;
+                if (type.matches("prep.*")){
+                    rule = rules.get("prep");
+                } else {
+                    rule = rules.get(type);
+                }
                 if (rule != null){
                     if (rule.apply(node, output));
                         nextLevel.addAll(node.getDependents());
