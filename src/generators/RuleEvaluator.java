@@ -21,7 +21,7 @@ public class RuleEvaluator {
         rules.put("iobj", new DOBJRule());
         rules.put("dobj", new DOBJRule());
         rules.put("advmod", new ADVMODRule());
-        // rules.put("prep", new PREPRule());
+        rules.put("prep", new PREPRule());
     }
 
     public Headline evaluateRules(Node root){
@@ -38,7 +38,9 @@ public class RuleEvaluator {
             nodeQueue.add(node);
 
         for (int i=1; i < 3; i++){
-            for(Node node: nodeQueue){
+            int length = nodeQueue.size();
+            for(int j=0; j < length; j++){
+                Node node = nodeQueue.removeFirst();
                 String type = node.getGrammaticalRelation().getShortName();
                 Rule rule = null;
 
