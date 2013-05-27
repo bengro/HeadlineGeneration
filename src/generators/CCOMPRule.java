@@ -30,7 +30,6 @@ public class CCOMPRule implements  Rule{
             Node n = h.removeLast();
             if (!output.contains(n))
                 output.add(govIndex + 1, n);
-
         }
 
         for (Node n: currentNode.getDependents())

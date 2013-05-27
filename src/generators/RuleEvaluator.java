@@ -24,7 +24,7 @@ public class RuleEvaluator {
         rules.put("xcomp", new XCOMPRule());
         rules.put("ccomp", new CCOMPRule());
         rules.put("prt", new PRTRule());
-        // rules.put("conj", new CONJRule());
+        rules.put("conj", new CONJRule());
     }
 
     public Headline evaluateRules(Node root, int maxHeadlineLength) {
@@ -60,7 +60,10 @@ public class RuleEvaluator {
             return output;
 
         output.add(realRoot);
-        nodeQueue.addAll(realRoot.getDependents());
+        realRoot.setModified(true);
+        for (Node n: realRoot.getDependents())
+            if (!n.isModified())
+                nodeQueue.add(n);
 
         for (int i = 1; i < 8; i++) {
             int length = nodeQueue.size();
@@ -131,6 +134,7 @@ public class RuleEvaluator {
 
                 if (rule != null && !node.isModified()) {
                     if (rule.apply(node, output, maxHeadlineLength)) {
+                        node.setModified(true);
                         for (Node n : node.getDependents()) {
                             if (!n.isModified()) {
                                 nextLevel.add(n);

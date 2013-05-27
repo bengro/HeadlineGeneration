@@ -1,12 +1,5 @@
 package generators;
 
-/**
- * Created with IntelliJ IDEA.
- * User: daspan
- * Date: 5/25/13
- * Time: 5:23 PM
- * To change this template use File | Settings | File Templates.
- */
 public class PREPRule implements Rule {
     @Override
     public boolean apply(Node currentNode, Headline output, int maxHeadlineLength) {
