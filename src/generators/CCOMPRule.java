@@ -25,7 +25,13 @@ public class CCOMPRule implements  Rule{
 
         assert govIndex >= 0;
 
-        output.addAll(govIndex + 1, h);
+        int hSize = h.size();
+        for (int i=0; i < hSize; i++){
+            Node n = h.removeLast();
+            if (!output.contains(n))
+                output.add(govIndex + 1, n);
+
+        }
 
         for (Node n: currentNode.getDependents())
             n.setModified(true);

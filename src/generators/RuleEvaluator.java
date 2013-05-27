@@ -23,6 +23,8 @@ public class RuleEvaluator {
         rules.put("prep", new PREPRule());
         rules.put("xcomp", new XCOMPRule());
         rules.put("ccomp", new CCOMPRule());
+        rules.put("prt", new PRTRule());
+        // rules.put("conj", new CONJRule());
     }
 
     public Headline evaluateRules(Node root, int maxHeadlineLength) {
@@ -48,7 +50,7 @@ public class RuleEvaluator {
             realRoot = root;
         }
 
-        String[] afterGovernor = new String[]{"agent", "iobj", "dobj", "advmod", "prep", "dcomp", "xcomp"};
+        String[] afterGovernor = new String[]{"agent", "iobj", "dobj", "advmod", "prep", "dcomp", "xcomp", "prt", "conj"};
         Set<String> afterGov = new HashSet<>(Arrays.asList(afterGovernor));
 
         String[] beforeGovernor = new String[]{"nn", "amod"};
@@ -121,6 +123,8 @@ public class RuleEvaluator {
 
                 if (type.matches("prep.*")) {
                     rule = rules.get("prep");
+                } else if (type.matches("conj")){
+                    rule = rules.get("conj");
                 } else {
                     rule = rules.get(type);
                 }
